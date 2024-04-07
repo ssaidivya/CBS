@@ -8,6 +8,10 @@ const config = {
 
   theme: {
     extend: {
+      fill: ['hover', 'focus'],
+      backgroundImage: {
+        "task":"url('./src/assets/bg.jpg')"
+      },
       colors: {
         // flowbite-svelte
         primary: {
