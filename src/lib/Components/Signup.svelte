@@ -73,6 +73,20 @@
     // Implement Google Sign-In logic here
     console.log("Google Sign-In");
   };
+
+  let skills = [
+    { value: "plumbing", name: "Plumbing" },
+    { value: "gardening", name: "Gardening Services" },
+    { value: "language tutoring", name: "Language Tutoring" },
+    { value: "home-coocked", name: "Home-cooked Meals" },
+    { value: "fitness-traning", name: "Fitness Training" },
+    { value: "homemade-crafts", name: "Homemade Crafts" },
+    { value: "graphic-design", name: "Graphic Design Services" },
+    { value: "computer-repair", name: "Computer Repair Services" },
+    { value: "music-lessons", name: "Music Lessons" },
+    { value: "photography-services", name: "Photography Services" },
+    { value: "educational-tutoring", name: "Educational Tutoring" },
+  ];
 </script>
 
 <svelte:head>
@@ -82,7 +96,11 @@
 <section id="signup">
   <div class="flex pt-20 text-center justify-center items-center">
     <div class="w-screen max-w-xl">
-    <p class="text-4xl font-bold text-black">Task Sender <span class="font-bold text-green-500 text-4xl">Register</span></p>
+      <p class="text-4xl font-bold text-black">
+        Task Sender <span class="font-bold text-green-500 text-4xl"
+          >Register</span
+        >
+      </p>
 
       <form
         on:submit|preventDefault={handleSubmit}
@@ -97,6 +115,7 @@
               Name
             </label>
             <input
+              required
               class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
               id="name"
               type="text"
@@ -112,6 +131,7 @@
               Email
             </label>
             <input
+              required
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="email"
               type="email"
@@ -128,6 +148,7 @@
             Password
           </label>
           <input
+            required
             on:input={handleChange}
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
@@ -157,6 +178,7 @@
             Address
           </label>
           <input
+            required
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="address"
             type="text"
@@ -171,8 +193,20 @@
           >
             Skills
           </label>
-          <div class="flex items-center">
-            <input
+          <span class="text-sm">Hold Cmd + slect to select multiple</span>
+          <div class="flex items-center w-full">
+            <select
+            placeholder="Ctrl+Click to select or Cmd+Click to select"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              id="category"
+              multiple
+              bind:value={user.skills}
+            >
+              {#each skills as skill}
+                <option value={skill.value}>{skill.name}</option>
+              {/each}
+            </select>
+            <!-- <input
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
               id="skills"
               type="text"
@@ -186,7 +220,7 @@
               on:click={addSkill}
             >
               Add
-            </button>
+            </button> -->
           </div>
           {#if user.skills.length > 0}
             <ul class="mt-2">

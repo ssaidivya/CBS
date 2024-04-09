@@ -54,14 +54,20 @@
     selectedUserId = uid;
     fetchMessages();
   }
-
   onMount(fetchUsers);
+
+  $:handleSkills=(selectedUserId)=>{
+    let skills= []
+   users.filter((user)=>user.uid===selectedUserId).map((user)=>{
+      user.skills.map((skill)=>{
+        skills.push(skill)
+      })
+   })
+   return skills
+  }
 </script>
 
-
-
-
-<div class="flex h-screen pt-4 pl-4">
+<div class="flex h-screen pt-4 pl-4 overflow-hidden">
   <div class="w-1/4 bg-gray-200 overflow-y-auto">
     {#if users.length > 0}
     {#each users as user}
@@ -79,7 +85,7 @@
       {/each}
       {/if}
   </div>
-  <div class="w-3/4 flex flex-col">
+  <div class="w-3/4 flex flex-col overflow-hidden">
     {#if selectedUserId}
     <!-- <div class="flex-1 overflow-y-auto p-4 space-y-2">
       {#each messages as message (message.id)}
@@ -94,7 +100,17 @@
         </div>
       {/each}
     </div> -->
-    <div class="flex-1 overflow-y-auto p-4 space-y-2">
+    <div class="flex-1 overflow-y-auto p-4 space-y-2 overflow-hidden">
+      <div>
+
+        <div>Skills - </div>
+        <div class="flex space-x-2 pb-6">
+          {#each handleSkills(selectedUserId) as skill}
+            <div class="text-amber-600 font-bold text-mg border rounded-xl space-y-10">{String(skill).charAt(0).toUpperCase() + skill.slice(1)}</div>
+          {/each}
+        </div>
+      </div>
+
       {#each messages as message (message.id)}
         <div class={`max-w-xs p-2 break-words border rounded-lg ${message.sender_id === currentUser ? 'ml-auto bg-blue-100' : 'mr-auto bg-gray-100'}`}>
           {message.text}
@@ -106,7 +122,7 @@
         </div>
       {/each}
     </div>
-      <div class="p-4 flex justify-center items-center rounded-full">
+      <div class="p-4 flex justify-center items-center rounded-full overflow-hidden">
         <input
           class="border p-2 w-full rounded"
           bind:value={newMessage}

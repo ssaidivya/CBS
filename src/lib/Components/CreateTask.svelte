@@ -3,6 +3,7 @@
   import { DatePicker } from "date-picker-svelte";
   import { createTask } from "../stores/store";
   import { navigate } from "svelte-routing";
+  import { Select, Label } from 'flowbite-svelte';
   let defaultModal = false;
   let uid=localStorage.getItem("uid");
   let taskData = {
@@ -37,6 +38,19 @@
     navigate("/home")
     defaultModal = false;
   };
+  let categories=[
+    { value: 'plumbing', name: 'Plumbing' },
+    { value: 'gardening', name: 'Gardening Services' },
+    { value: 'language tutoring', name: 'Language Tutoring' },
+    { value: 'home-coocked', name: 'Home-cooked Meals' },
+    { value: 'fitness-traning', name: 'Fitness Training' },
+    { value: 'homemade-crafts', name: 'Homemade Crafts' },
+    { value: 'graphic-design', name: 'Graphic Design Services' },
+    { value: 'computer-repair', name: 'Computer Repair Services' },
+    { value: 'music-lessons', name: 'Music Lessons' },
+    { value: 'photography-services', name: 'Photography Services' },
+    { value: 'educational-tutoring', name: 'Educational Tutoring' },
+  ]
 </script>
 
 <div class="pr-10 text-center justify-center flex">
@@ -61,11 +75,8 @@
     <br />
     <div class="grid space-y-2">
       <label class="text-m font-bold text-black" for="category">Category</label>
-      <input
-        bind:value={taskData.category}
-        type="text"
-        placeholder="Category"
-      />
+      <Select placeholder="Choose Category" class="mt-2" items={categories} bind:value={taskData.category}/>
+    
     </div>
     <div class="grid space-y-2">
       <label

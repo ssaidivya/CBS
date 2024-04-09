@@ -85,10 +85,19 @@ export const signIn = async (user) => {
 
 export const googleLogin = async () => {
   const provider = new GoogleAuthProvider();
+
   await signInWithPopup(auth, provider)
-    .then((result) => {
+    .then(async(result) => {
+      let {email,uid}= result?.user
+      const userRef = doc(firestore, "users", uid);
+      const userSnap = await getDoc(userRef);
       console.log(result.user);
-      const { email, uid } = result?.user;
+      if (!userSnap.exists()) {
+       
+        console.error("User does not exist in database.");
+        alert("Please do sign up first");
+        return;
+      }
       userStore.set({
         ...initialValue,
         uid: result.user.uid,
@@ -170,6 +179,7 @@ export const createTask = async (taskData) => {
       status: Task_Process.CREATED,
       tasksAccepted: [],
       isTaskAccepted: false,
+      isDone:false
     });
     console.log("Task Created");
     alert("Task Created Successfully");
@@ -294,5 +304,24 @@ export const _forgot_password = async (email) => {
   }catch(error){
     console.error(error);
     alert("Failed to send password reset email");
+  }
+}
+
+export const update_Profile = async (user, uid) => {
+  try {
+    let dbRef= collection(firestore, "users");
+    
+    let q= query(dbRef, where("uid", "==", uid));
+    let querySnapshot = await getDocs(q);
+    let docRef =querySnapshot.docs[0].ref
+    await updateDoc(docRef, {
+      ...user
+    })
+    console.log("Profile Updated");
+    alert("Profile Updated Successfully");
+    
+  } catch (error) {
+    console.error(error);
+    alert("Failed to update profile");
   }
 }

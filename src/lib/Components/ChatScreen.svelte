@@ -1,10 +1,15 @@
 <script>
+  import { Button } from "flowbite-svelte";
   import Chat from "./Chat.svelte";
   import CreateTask from "./CreateTask.svelte";
 
 
   import Profile from "./Profile.svelte";
+  import { navigate } from "svelte-routing";
 
+$:handleHomePage=()=>{
+  navigate("/home")
+}
 </script>
 
 
@@ -51,12 +56,19 @@
         >
       </a>
         <div class="flex items-center space-x-6 rtl:space-x-reverse">
+          <div class="border">
+
+            <Button on:click={handleHomePage}>Home</Button>
+
+             </div>
             <CreateTask/>
            <Profile/>
+           
+            
         </div>
     </div>
 </nav>
 
-<section>
+<section class="overflow-hidden">
   <Chat/>
 </section>

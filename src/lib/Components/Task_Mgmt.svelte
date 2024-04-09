@@ -21,7 +21,7 @@
   import {
     ArrowUpRightFromSquareSolid,
     MessageCaptionSolid,
-    DollarOutline
+    DollarOutline,
   } from "flowbite-svelte-icons";
   let searchTerm = "";
   export let user;
@@ -48,34 +48,11 @@
   }
   let uid = localStorage.getItem("uid");
 
-  let items = [
-    {
-      id: 1,
-      category: "Plumbing",
-      description: "Plumbing in House Hold",
-      needToDone: "02/20/2024",
-    },
-    {
-      id: 2,
-      category: "Watering",
-      description: "Gardening and Watering",
-      needToDone: "02/20/2024",
-    },
-    {
-      id: 3,
-      category: "Gardening",
-      description: "Gardenin by cutting excess grass",
-      needToDone: "02/20/2024",
-    },
-    {
-      id: 4,
-      category: "Washing machine repair",
-      description: "Reair washing machine by cleaning blocks and all",
-      needToDone: "02/20/2024",
-    },
-  ];
+  $: if (tasks?.length) {
+    console.log("tasks ☺️", tasks);
+  }
   $: filteredItems =
-    tasks?.length &&
+    tasks?.length>0 &&
     tasks.filter(
       (item) =>
         item.category.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
@@ -84,7 +61,7 @@
   function handleAccept(rowId) {
     console.log("Row clicked:", rowId);
     if (rowId.uid !== uid) {
-      _accept_task(rowId.id, uid,user.name);
+      _accept_task(rowId.id, uid, user.name);
     }
   }
   function handleDone(rowId) {
@@ -93,21 +70,10 @@
       _done_task(rowId.id, uid);
     }
   }
-
-  function goToChat() {
-    navigate("/chat");
-  }
-
-  function skillMatchesCategory(user, item) {
-    if (!user.skills || !item.category) return false;
-
-    // Create a regex pattern to test case-insensitive matching
-    var pattern = new RegExp("^" + item.category + "$", "i");
-
-    // Use Array.prototype.some() to check if any skill matches the category
-    return user.skills.some((skill) => pattern.test(skill));
-  }
 </script>
+<svelte:head>
+  <title>Tasks</title>
+</svelte:head>
 
 <div class="w-screen h-screen pl-8 pr-8 pt-8 border border-b-gray-950">
   <TableSearch
@@ -136,7 +102,9 @@
               {#if user}
                 {#if user.skills && user.skills.includes(item.category)}
                   <div class="flex gap-3">
-                    <div class="flex justify-center items-center">{item.uid===uid ?"":"Accept"}</div>
+                    <div class="flex justify-center items-center">
+                      {item.uid === uid ? "Created By Me" : "Accepted"}
+                    </div>
                     {#if !item.isTaskAccepted && !item.isDone && item.uid !== uid}
                       <button
                         on:click|stopPropagation={() => handleAccept(item)}
@@ -146,6 +114,8 @@
                       >
                         <ArrowUpRightFromSquareSolid />
                       </button>
+                      {:else}
+                      <!-- <div>Accepted</div> -->
                     {/if}
                     {#if !item.isTaskDone && item.uid === uid}
                       <div class="flex justify-center items-center">Done</div>
@@ -161,18 +131,9 @@
                     {:else}
                       <button disabled>Done</button>
                     {/if}
-                    <div class="flex justify-center items-center">Chat</div>
-
-                    <button
-                      on:click|stopPropagation={goToChat}
-                      data-tooltip-target="tooltip-default"
-                      type="button"
-                      class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800"
-                    >
-                      <MessageCaptionSolid />
-                    </button>
                   </div>
                 {/if}
+               
               {/if}
             </TableBodyCell>
           </TableBodyRow>

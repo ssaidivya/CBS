@@ -3,10 +3,15 @@
   import { logout } from "../stores/store";
   import CreateTask from "./CreateTask.svelte";
   import Profile from "./Profile.svelte";
+  import { navigate } from "svelte-routing";
   export let open = false;
   $: handleLogout = () => {
     logout();
   };
+
+  function goToChat() {
+    navigate("/chat");
+  }
 </script>
 
 <aside
@@ -20,6 +25,9 @@
     >
       <CreateTask />
     </a>
+    <div class="pr-10 text-center justify-center flex w-full">
+     <Button on:click={goToChat} class="w-34">Chat</Button>
+    </div>
     <div class="absolute bottom-20 w-full pr-24">
       <a
         class="block text-center hover:border rounded-full hover:bg-blue-300 hover:text-black"
