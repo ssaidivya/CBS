@@ -6,6 +6,7 @@
   import Home from "./lib/Components/Home.svelte";
   import InfoPage from "./lib/Components/InfoPage.svelte";
   import { userStore } from "./lib/stores/store";
+  import TasksRelatedTome from './lib/Components/TasksRelatedTome.svelte';
   onMount(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {

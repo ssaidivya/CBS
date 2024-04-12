@@ -12,6 +12,7 @@
     description: "",
     needToDone: "",
   };
+  $: user= JSON.parse(localStorage.getItem("user"));
   $: handleDate = (e) => {
     console.log(e.detail);
     const dateObj = new Date(e.detail);
@@ -32,7 +33,8 @@
       category: taskData.category,
       description: taskData.description,
       needToDone: taskData.needToDone,
-      uid:uid
+      uid:uid,
+      createdBy:user.name
     }
     createTask(taskCreationData);
     navigate("/home")

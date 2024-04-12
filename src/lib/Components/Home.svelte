@@ -27,6 +27,8 @@
     console.log("Reactive userData:", userData);
     // Perform any other actions needed when userData updates
   }
+ 
+ 
 </script>
 
 <main class="w-screen border pt-1 fixed h-screen">

@@ -4,6 +4,7 @@
   import CreateTask from "./CreateTask.svelte";
   import Profile from "./Profile.svelte";
   import { navigate } from "svelte-routing";
+  import TasksRelatedTome from "./TasksRelatedTome.svelte";
   export let open = false;
   $: handleLogout = () => {
     logout();
@@ -11,6 +12,9 @@
 
   function goToChat() {
     navigate("/chat");
+  }
+  function goToTasksRelatedToMe() {
+    navigate("/tasksrelatedtome");
   }
 </script>
 
@@ -28,6 +32,9 @@
     <div class="pr-10 text-center justify-center flex w-full">
      <Button on:click={goToChat} class="w-34">Chat</Button>
     </div>
+    <!-- <div class="pr-10 text-center justify-center flex w-full">
+     <TasksRelatedTome/>
+    </div> -->
     <div class="absolute bottom-20 w-full pr-24">
       <a
         class="block text-center hover:border rounded-full hover:bg-blue-300 hover:text-black"

@@ -23,6 +23,8 @@
     MessageCaptionSolid,
     DollarOutline,
   } from "flowbite-svelte-icons";
+  import TaskAssignedView from "./TaskAssignedView.svelte";
+  import TaskDoneModel from "./TaskDoneModel.svelte";
   let searchTerm = "";
   export let user;
   let data;
@@ -52,7 +54,7 @@
     console.log("tasks ☺️", tasks);
   }
   $: filteredItems =
-    tasks?.length>0 &&
+    tasks?.length > 0 &&
     tasks.filter(
       (item) =>
         item.category.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
@@ -70,7 +72,12 @@
       _done_task(rowId.id, uid);
     }
   }
+
+  $: if (filteredItems?.length) {
+    console.log("filteredItems ☺️", filteredItems);
+  }
 </script>
+
 <svelte:head>
   <title>Tasks</title>
 </svelte:head>
@@ -85,7 +92,11 @@
       <TableHeadCell>ID</TableHeadCell>
       <TableHeadCell>Category</TableHeadCell>
       <TableHeadCell>Description</TableHeadCell>
+      <TableHeadCell>Created By</TableHeadCell>
       <TableHeadCell>Need To Done By</TableHeadCell>
+      <TableHeadCell>Is Task Done</TableHeadCell>
+      <TableHeadCell>Done By</TableHeadCell>
+      <TableHeadCell>Assigned To</TableHeadCell>
       <TableHeadCell>Actions</TableHeadCell>
     </TableHead>
     <TableBody>
@@ -97,15 +108,32 @@
             <TableBodyCell>
               <AccordionContent description={item.description} /></TableBodyCell
             >
+            <TableBodyCell>{item.createdBy}</TableBodyCell>
             <TableBodyCell>{item.needToDone}</TableBodyCell>
+            <TableBodyCell>{item.isDone ? "Yes" : "No"}</TableBodyCell>
+            <TableBodyCell>
+              {#if item.tasksDone.length}
+                {#each item.tasksDone as task, index}
+                  <div>{task.doneBy}</div>
+                {/each}
+              {/if}
+            </TableBodyCell>
+            <TableBodyCell>
+              {#if item.isTaskAccepted}
+                {#each item.tasksAccepted as ta (ta.uid)}
+                  <TaskAssignedView userData={ta} />
+                {/each}
+              {/if}
+            </TableBodyCell>
             <TableBodyCell on:click={() => console.log(item)}>
               {#if user}
                 {#if user.skills && user.skills.includes(item.category)}
                   <div class="flex gap-3">
                     <div class="flex justify-center items-center">
-                      {item.uid === uid ? "Created By Me" : "Accepted"}
+                      {item.uid === uid ? "Created By Me" : ""}
                     </div>
                     {#if !item.isTaskAccepted && !item.isDone && item.uid !== uid}
+                      <div class="flex justify-center items-center">Accept</div>
                       <button
                         on:click|stopPropagation={() => handleAccept(item)}
                         data-tooltip-target="tooltip-default"
@@ -114,26 +142,26 @@
                       >
                         <ArrowUpRightFromSquareSolid />
                       </button>
-                      {:else}
-                      <!-- <div>Accepted</div> -->
                     {/if}
-                    {#if !item.isTaskDone && item.uid === uid}
+                    {#if !item.isDone && item.uid === uid}
                       <div class="flex justify-center items-center">Done</div>
-
-                      <button
+                      <TaskDoneModel taskData={item} />
+                    {:else}
+                      <div>Already Done</div>
+                    {/if}
+                    <!-- {#if item.uid===uid}
+                   
+                    <button
                         on:click|stopPropagation={() => handleDone(item)}
                         data-tooltip-target="tooltip-default"
                         type="button"
                         class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800"
                       >
-                        <DollarOutline />
+                      Task Completed
                       </button>
-                    {:else}
-                      <button disabled>Done</button>
-                    {/if}
+                    {/if} -->
                   </div>
                 {/if}
-               
               {/if}
             </TableBodyCell>
           </TableBodyRow>
