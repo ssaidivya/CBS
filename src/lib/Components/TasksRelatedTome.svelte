@@ -1,9 +1,6 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
-  import { Drawer, Button, CloseButton } from "flowbite-svelte";
-  import { InfoCircleSolid, ArrowRightOutline } from "flowbite-svelte-icons";
-  import { sineIn } from "svelte/easing";
   import {
     Table,
     TableBody,
@@ -11,97 +8,82 @@
     TableBodyRow,
     TableHead,
     TableHeadCell,
+    TableSearch,
   } from "flowbite-svelte";
-  let hidden6 = true;
-  let transitionParamsRight = {
-    x: 320,
-    duration: 200,
-    easing: sineIn,
-  };
+  import { onMount } from "svelte";
+  import AccordionContent from "./Table_Actions.svelte";
+  import { _accept_task, _get_tasks_realted_to_user } from "../stores/store";
+  let searchTerm = "";
+  
+  let uid = localStorage.getItem("uid");
+  let userRealatedTasks = [];
+
+  onMount(() => {
+    _get_tasks_realted_to_user(uid)
+      .then((tasks) => {
+        userRealatedTasks = tasks;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+  $: if (userRealatedTasks) console.log(userRealatedTasks);
+
+  function handleAccept(rowId) {
+    console.log("Row clicked:", rowId);
+    if (rowId.uid !== uid) {
+      _accept_task(rowId.id, uid, user.name);
+    }
+  }
 </script>
 
-<div class="text-center">
-  <Button on:click={() => (hidden6 = false)}>Tasks Related To Me</Button>
-</div>
-
-<Drawer
-  class="w-full"
-  placement="right"
-  transitionType="fly"
-  transitionParams={transitionParamsRight}
-  bind:hidden={hidden6}
-  id="sidebar6"
+<TableSearch
+  placeholder="Search by maker name"
+  hoverable={true}
+  bind:inputValue={searchTerm}
 >
-  <div class="flex items-center">
-    <h5
-      id="drawer-label"
-      class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"
-    >
-      <InfoCircleSolid class="w-4 h-4 me-2.5" />Tasks Related To Me
-    </h5>
-    <CloseButton
-      on:click={() => (hidden6 = true)}
-      class="mb-4 text-black dark:text-white"
-    />
-  </div>
-  <Table striped={true}>
-    <TableHead>
-      <TableHeadCell>Product name</TableHeadCell>
-      <TableHeadCell>Color</TableHeadCell>
-      <TableHeadCell>Category</TableHeadCell>
-      <TableHeadCell>Price</TableHeadCell>
-      <TableHeadCell>
-        <span class="sr-only">Edit</span>
-      </TableHeadCell>
-    </TableHead>
-    <TableBody class="divide-y">
+  <TableHead>
+    <TableHeadCell>ID</TableHeadCell>
+    <TableHeadCell>Category</TableHeadCell>
+    <TableHeadCell>Description</TableHeadCell>
+    <TableHeadCell>Created By</TableHeadCell>
+    <TableHeadCell>Created At</TableHeadCell>
+    <TableHeadCell>DeadLine</TableHeadCell>
+    <TableHeadCell>Assigned To</TableHeadCell>
+    <TableHeadCell>Actions</TableHeadCell>
+  </TableHead>
+  <TableBody class="divide-y">
+    {#if userRealatedTasks.length>0}
+    {#each userRealatedTasks as item,index}
       <TableBodyRow>
-        <TableBodyCell>Apple MacBook Pro 17"</TableBodyCell>
-        <TableBodyCell>Sliver</TableBodyCell>
-        <TableBodyCell>Laptop</TableBodyCell>
-        <TableBodyCell>$2999</TableBodyCell>
+        <TableBodyCell>{index+1}</TableBodyCell>
+        <TableBodyCell>{item.category}</TableBodyCell>
         <TableBodyCell>
-          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
+          <AccordionContent description={item.description} /></TableBodyCell
+        >
+        <TableBodyCell>{item.createdBy}</TableBodyCell>
+        <TableBodyCell>{new Date(item.createdAt).toDateString()}</TableBodyCell>
+        <TableBodyCell>{item.needToDone}</TableBodyCell>
+        <TableBodyCell>{item.assignedTo}</TableBodyCell>
+        <TableBodyCell>
+          {#if !item.isTaskAccepted}
+          <button
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            on:click|stopPropagation={() => handleAccept(item)}
+          >
+            Accept
+          </button>
+          {:else}
+          <button
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          on:click={()=>alert(`Task is already accepted by ${item.assignedTo} you can't accept again`)}
+        >
+          Accept
+        </button>
+            {/if}
         </TableBodyCell>
       </TableBodyRow>
-      <TableBodyRow>
-        <TableBodyCell>Microsoft Surface Pro</TableBodyCell>
-        <TableBodyCell>White</TableBodyCell>
-        <TableBodyCell>Laptop PC</TableBodyCell>
-        <TableBodyCell>$1999</TableBodyCell>
-        <TableBodyCell>
-          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
-        </TableBodyCell>
-      </TableBodyRow>
-      <TableBodyRow>
-        <TableBodyCell>Magic Mouse 2</TableBodyCell>
-        <TableBodyCell>Black</TableBodyCell>
-        <TableBodyCell>Accessories</TableBodyCell>
-        <TableBodyCell>$99</TableBodyCell>
-        <TableBodyCell>
-          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
-        </TableBodyCell>
-      </TableBodyRow>
-      <TableBodyRow>
-        <TableBodyCell>Google Pixel Phone</TableBodyCell>
-        <TableBodyCell>Gray</TableBodyCell>
-        <TableBodyCell>Phone</TableBodyCell>
-        <TableBodyCell>$799</TableBodyCell>
-        <TableBodyCell>
-          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
-        </TableBodyCell>
-      </TableBodyRow>
-      <TableBodyRow>
-        <TableBodyCell>Apple Watch 5</TableBodyCell>
-        <TableBodyCell>Red</TableBodyCell>
-        <TableBodyCell>Wearables</TableBodyCell>
-        <TableBodyCell>$999</TableBodyCell>
-        <TableBodyCell>
-          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
-        </TableBodyCell>
-      </TableBodyRow>
-    </TableBody>
-  </Table>
-  
-  </Drawer
->
+    {/each}
+    {/if}
+  </TableBody>
+</TableSearch>

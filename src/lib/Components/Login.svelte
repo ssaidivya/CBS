@@ -19,7 +19,7 @@
 
   const validatePassword = (password) => {
     let score = 0;
-    errorMessages = []; // Reset error messages
+    errorMessages = []; 
     const criteria = [
         { regex: /.{6,}/, message: "At least 6 characters", score: 20 },
       

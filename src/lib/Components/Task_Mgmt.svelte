@@ -20,8 +20,6 @@
   import { Link, navigate } from "svelte-routing";
   import {
     ArrowUpRightFromSquareSolid,
-    MessageCaptionSolid,
-    DollarOutline,
   } from "flowbite-svelte-icons";
   import TaskAssignedView from "./TaskAssignedView.svelte";
   import TaskDoneModel from "./TaskDoneModel.svelte";
@@ -93,7 +91,7 @@
       <TableHeadCell>Category</TableHeadCell>
       <TableHeadCell>Description</TableHeadCell>
       <TableHeadCell>Created By</TableHeadCell>
-      <TableHeadCell>Need To Done By</TableHeadCell>
+      <TableHeadCell>DeadLine</TableHeadCell>
       <TableHeadCell>Is Task Done</TableHeadCell>
       <TableHeadCell>Done By</TableHeadCell>
       <TableHeadCell>Assigned To</TableHeadCell>

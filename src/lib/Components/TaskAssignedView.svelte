@@ -32,27 +32,16 @@
     })
   })
 
-  let store = get(userStore);
-  console.log(
-    "====================================store================================",
-    store
-  );
-  $: if (AllTasks) {
-    console.log(
-      "====================================tasks================================",
-      AllTasks
-    );
-  }
 </script>
 
 <Button on:click={() => (defaultModal = true)}
   >{userData.name === user.name ? "Me" : userData.name}</Button
 >
-<Modal title="Information about {user.name}" bind:open={defaultModal} autoclose>
+<Modal title="Information about {userData.name}" bind:open={defaultModal} autoclose>
   <div class="font-bold text-lg">Created Tasks</div>
   {#each tasks as task (task.id)}
     <div class="bg-green-50">
-      <p>Task: {task.title}</p>
+      <p>Task: {task.category}</p>
       <p>Created At: {new Date(task.createdAt).toDateString()}</p>
       <p>Need to Done By: {task.needToDone}</p>
     </div>

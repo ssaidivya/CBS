@@ -126,7 +126,10 @@ export const googleLogin = async () => {
 export const logout = async () => {
   try {
     await signOut(auth);
+    localStorage.removeItem("uid");
+    localStorage.removeItem("user");
     userStore.set({ ...initialValue });
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
@@ -232,9 +235,11 @@ export const _accept_task = async (
       status: Task_Process.ACCEPTED,
       isTaskAccepted: true,
       tasksAccepted: [{ uid: uid, date: new Date().toISOString(), name }],
+      assignedTo: name,
     });
     console.log("Task Accepted");
     alert("Task Accepted Successfully");
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }
@@ -244,26 +249,27 @@ export const _done_task = async (
   /** @type {any} */ uid,
   doneInfo
 ) => {
-  console.log("Here is the task id", uid,taskId,doneInfo);
+  console.log("Here is the task id", uid, taskId, doneInfo);
   try {
     let dbRef = doc(firestore, `tasks/${taskId}`);
     const tasksData = await _get_user_tasks(uid);
-   
-    
-    console.log("tasksData[0].uid == uid",tasksData[0].uid == uid);
+
+    console.log("tasksData[0].uid == uid", tasksData[0].uid == uid);
     // @ts-ignore
     if (uid === tasksData[0].uid) {
       await updateDoc(dbRef, {
         status: Task_Process.DONE,
         isTaskAccepted: false,
         isDone: true,
+        taskDoneByUID:doneInfo.userId,
         tasksDone: [
           {
-            uid: uid,
+            creatorUID: uid,
             date: new Date().toISOString(),
             doneNote: doneInfo.doneNote,
             doneBy: doneInfo.doneBy,
             isSelfDone: doneInfo.isSelfDone,
+            doneUserId: doneInfo.userId,
           },
         ],
       });
@@ -278,9 +284,6 @@ export const _done_task = async (
 };
 
 export const _get_user_tasks = async (/** @type {unknown} */ uid) => {
-  console.log("====================================dmnfdknfdnfmdnfmdnfmnd");
-  console.log(uid);
-  console.log("====================================");
   try {
     const dbRef = collection(firestore, "tasks");
     const q = query(dbRef, where("uid", "==", uid));
@@ -384,3 +387,55 @@ export async function fetchUsers(searchTerm = "") {
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => doc.data());
 }
+
+/**
+ * @param {string} uid
+ * @returns {Promise<any>}
+ */
+
+// here, need to get the skills of the user form the user colleciton and based on that
+// filter the related tasks from the db in the tasks colleciton
+// return the related tasks array to from this function
+
+export const _get_tasks_realted_to_user = async (uid) => {
+  try {
+    const userRef = collection(firestore, "users");
+    let userQuery = query(userRef, where("uid", "==", uid));
+    let userSnapshot = await getDocs(userQuery);
+    let userData = userSnapshot.docs.map((doc) => doc.data().skills);
+    console.log("userData", userData[0]);
+    const tasksRef = collection(firestore, "tasks");
+    let tasksData = [];
+
+    let tasksQuery = query(tasksRef, where("category", "in", userData[0]));
+    let tasksSnapshot = await getDocs(tasksQuery);
+    tasksSnapshot.docs.map((doc) => {
+      tasksData.push({ ...doc.data(), id: doc.id });
+    });
+    console.log("Tasks related to user's skills:", tasksData);
+
+    return tasksData;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export const _get_tasks_done_by_me = async (uid) => {
+  try {
+    const tasksRef = collection(firestore, "tasks");
+    let tasksData = [];
+    let tasksQuery = query(tasksRef, where("taskDoneByUID", "==", uid));
+    let tasksSnapshot = await getDocs(tasksQuery);
+    tasksSnapshot.docs.map((doc) => {
+      tasksData.push({ ...doc.data(), id: doc.id });
+    });
+    console.log("Tasks done by me:", tasksData);
+
+    return tasksData;
+    
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};

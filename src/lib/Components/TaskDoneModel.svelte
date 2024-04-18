@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import { Button, Checkbox, Input, Modal, Select } from "flowbite-svelte";
   import { DollarOutline } from "flowbite-svelte-icons";
   import { _done_task, fetchUsers } from "../stores/store";
@@ -17,10 +19,11 @@
         value: user.uid,
         name: user.name
       }));
-      if (userMap.length > 0) {
-        info.userId = userMap[0].value; 
-        info.doneBy = userMap[0].name;
-      }
+      userMap=userMap.filter(user => user.value !== uid);
+      // if (userMap.length > 0) {
+      //   info.userId = userMap[0].value; 
+      //   info.doneBy = userMap[0].name;
+      // }
     } catch (error) {
       console.error("Failed to fetch users:", error);
     }
@@ -30,37 +33,45 @@
     userId: "",
     doneBy: "",
     doneNote: "",
-    isSelfDone:""
+    isSelfDone:false,
   };
 
   function handleSelectionChange(event) {
-    const selectedUser = userMap.find(user => user.value === event.detail);
+    
+    const selectedUser = userMap.find(user => user.value === event);
     if (selectedUser) {
       info.userId = selectedUser.value;
-      info.doneBy = selectedUser.label;
+      info.doneBy = selectedUser.name;
     }
   }
 
   function handleDoneTasks() {
-    if (info.doneBy) {
+    if (info.isSelfDone) {
       info.doneBy = "Me",
       info.doneNote = "",
-      info.isSelfDone ;
+      info.isSelfDone =true;
+      info.userId=uid
+    }else{
+      info.isSelfDone =false;
+      info.doneBy,
+      info.doneNote,
+      info.userId
     }
-    _done_task(taskData.id, uid, info);
+    console.log("Done Task:", info.doneBy);
+    _done_task(taskData.id, info.userId, info);
   }
 </script>
 <Button color="red" on:click={() => (defaultModal = true)}>
   <DollarOutline />
 </Button>
 
-<Modal title="Terms of Service" bind:open={defaultModal} autoclose>
+<Modal title="Task Done By" bind:open={defaultModal} autoclose>
   <Select 
     placeholder="Choose User" 
     class="mt-2" 
     items={userMap} 
     bind:value={info.userId}
-    on:change={handleSelectionChange}
+    on:change={(e)=>handleSelectionChange(e.target.value)}
   />
   <Input
     placeholder="Enter your note to complete this task"
@@ -72,7 +83,7 @@
   <div class="flex">
 
     <label for="isSelfDone" class="block text-sm font-medium pr-3 text-orange-500">Done By Me</label>
-    <Checkbox bind:value={info.isSelfDone}/>
+    <Checkbox bind:checked={info.isSelfDone}/>
   </div>
   <svelte:fragment slot="footer">
     <Button on:click={handleDoneTasks} color="alternative">Done</Button>

@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
   socket.on('sendMessage', async ({ message, sender_id, receiver_id }) => {
-    const savedMessage = await db.collection('messages').add({
+    await db.collection('messages').add({
       message,
       sender_id,
       receiver_id,
