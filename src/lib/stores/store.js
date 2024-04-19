@@ -101,21 +101,17 @@ export const googleLogin = async () => {
   await signInWithPopup(auth, provider)
     .then(async (result) => {
       let { email, uid } = result?.user;
-      const userRef = doc(firestore, "users", uid);
-      const userSnap = await getDoc(userRef);
-      console.log(result.user);
-      if (!userSnap.exists()) {
+      let collectionRef = collection(firestore, "users");
+      let docRef = query(collectionRef, where("uid", "==", uid),where("email", "==", email));
+      let userData = await getDocs(docRef);
+      
+      if (!userData.docs.length>0) {
         console.error("User does not exist in database.");
         alert("Please do sign up first");
         return;
       }
-      userStore.set({
-        ...initialValue,
-        uid: result.user.uid,
-        isAuthenticated: true,
-        email,
-      });
       localStorage.setItem("uid", result.user.uid);
+      localStorage.setItem("user", JSON.stringify(userData.docs[0].data()));
       navigate("/home");
     })
     .catch((error) => {

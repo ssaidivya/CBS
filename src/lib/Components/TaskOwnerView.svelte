@@ -70,8 +70,4 @@
           {/each}
       {/if}
     {/each}
-    <svelte:fragment slot="footer">
-      <Button on:click={() => alert('Handle "success"')}>I accept</Button>
-      <Button color="alternative">Decline</Button>
-    </svelte:fragment>
   </Modal>
