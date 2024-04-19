@@ -123,7 +123,7 @@
                 {/each}
               {/if}
             </TableBodyCell>
-            <TableBodyCell on:click={() => console.log(item)}>
+            <TableBodyCell>
               {#if user}
                 {#if user.skills && user.skills.includes(item.category)}
                   <div class="flex gap-3">
@@ -131,7 +131,7 @@
                       {item.uid === uid ? "Created By Me" : ""}
                     </div>
                     {#if !item.isTaskAccepted && !item.isDone && item.uid !== uid}
-                      <div class="flex justify-center items-center">Accept</div>
+                      <div class="flex justify-center items-center">{item.isTaskAccepted?"Acccept":""}</div>
                       <button
                         on:click|stopPropagation={() => handleAccept(item)}
                         data-tooltip-target="tooltip-default"

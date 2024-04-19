@@ -2,11 +2,8 @@
   import { Button } from "flowbite-svelte";
   import { logout } from "../stores/store";
   import CreateTask from "./CreateTask.svelte";
-  import Profile from "./Profile.svelte";
   import { navigate } from "svelte-routing";
-  import TasksRelatedTome from "./TasksRelatedTome.svelte";
   export let open = false;
-  $: tasksRealtedToMe = false;
   $: handleLogout = () => {
     logout();
   };
@@ -53,27 +50,36 @@
     <div class="pr-10 text-center justify-center flex w-full">
       <Button on:click={goToChat} class="w-34">Chat</Button>
     </div>
-    {#if CurrentPath==="/home/tasksrelatedtome"}
-    <div class="pr-10 text-center justify-center flex w-full">
-      <Button on:click={goToTasks} class="w-34"
-        >Tasks</Button
-      >
-    </div>
-    {:else}
+    
     <div class="pr-10 text-center justify-center flex w-full">
       <Button on:click={goToTasksRelatedToMe} class="w-34"
         >Tasks Related To Me</Button
       >
     </div>
-    {/if}
+    {#if CurrentPath==="/home/tasksdonebyme"}
     <div class="pr-10 text-center justify-center flex w-full">
       <Button on:click={geToTasksDoneByMe} class="w-34"
         >Tasks already Done</Button
       >
     </div>
+    {:else}
+    <div class="pr-10 text-center justify-center flex w-full">
+      <Button on:click={geToTasksDoneByMe} class="w-34"
+        >Tasks Done By Me</Button
+      >
+    </div>
+    {/if}
     <!-- <div class="pr-10 text-center justify-center flex w-full">
      <TasksRelatedTome/>
     </div> -->
+    <div class="absolute bottom-25 w-full pr-24">
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a
+        class="block text-center hover:border rounded-full hover:bg-blue-300 hover:text-black"
+        href=""
+        on:click={()=>window.location.reload}>Reload</a
+      >
+    </div>
     <div class="absolute bottom-20 w-full pr-24">
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a

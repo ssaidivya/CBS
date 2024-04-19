@@ -71,10 +71,6 @@
 
 </script>
 
-<svelte:head>
-  <title>Profile</title>
-</svelte:head>
-
 <div class="text-center flex justify-center">
   <button on:click={() => (hidden4 = false)}
     ><Avatar
@@ -161,53 +157,7 @@
         {/each}
       {/if}
     </div>
-    <div>Tasks Related To You</div>
-    {#if userTasks}
-      <div
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 mb-6"
-      >
-        {#each userTasks as task, index}
-          <div
-            class="flex items-center justify-center p-3 border border-gray-200 hover:border-gray-400 rounded-lg shadow-sm bg-gray-50"
-          >
-            <span class="text-sm text-gray-800"
-              >Task:{task.title}
-              {" "}
-              <span class=" text-red-600"
-                >Need to Done By <span class=" bg-yellow-300 text-black"
-                  >{task.needToDone}</span
-                ></span
-              ></span
-            >
-          </div>
-        {/each}
-      </div>
-    {/if}
-
-    <div>Tasks Already Done</div>
-    {#each userTasks as task, index}
-      <div
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 mb-6"
-      >
-        {#if task.isTaskDone}
-          <div
-            class="flex items-center justify-center p-3 border border-gray-200 hover:border-gray-400 rounded-lg shadow-sm bg-gray-50"
-          >
-            <span class="text-sm text-gray-800 grid"
-              >Task:{task.title}
-              {" "}
-              {#each task.tasksDone as td, index}
-                <span
-                  >Done At: <span class="bg-green-500"
-                    >{new Date(td.date).toDateString()}</span
-                  ></span
-                >
-              {/each}
-            </span>
-          </div>
-        {/if}
-      </div>
-    {/each}
+   
     <Button on:click={handleUpdateUser} disabled={!isEditing}>
       Update
     </Button>
