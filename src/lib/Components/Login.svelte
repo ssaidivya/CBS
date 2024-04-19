@@ -1,7 +1,8 @@
 <script>
   import {auth} from "../../dbconfig/firebase"
   import {getAuth,signInWithEmailAndPassword} from "firebase/auth"
-  import {googleLogin, signIn} from "../stores/store"
+  import {_forgot_password, googleLogin, signIn} from "../stores/store"
+  import InfoPage from "./InfoPage.svelte";
   let user = {
     email: "",
     password: "",
@@ -18,7 +19,7 @@
 
   const validatePassword = (password) => {
     let score = 0;
-    errorMessages = []; // Reset error messages
+    errorMessages = []; 
     const criteria = [
         { regex: /.{6,}/, message: "At least 6 characters", score: 20 },
       
@@ -31,12 +32,15 @@
             errorMessages.push(message);
         }
     });
-
     passwordStrength = score;
 };
 
   $: handleSubmit=()=>{
     signIn({"email":user.email,"password":user.password})
+  }
+  $:handleForgotPassword=()=>{
+    _forgot_password(user.email)
+
   }
 
 </script>
@@ -46,9 +50,12 @@
 </svelte:head>
 
 
-<div class="flex pt-20 text-center justify-center items-center">
-  <div class="w-screen max-w-xl">
-    <form on:submit|preventDefault={handleSubmit} class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+
+<section class="md:pl-20" id="login">
+<div class="flex pt-10 h-full text-center justify-center items-center">
+  <div class="pt-10 w-screen h-screen max-w-xl">
+    <p class="text-4xl font-bold text-black">Task Sender <span class="font-bold text-red-500 text-4xl">Login</span></p>
+    <form on:submit|preventDefault={handleSubmit} class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 h-3/4">
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="Email">
           Email
@@ -89,7 +96,7 @@
         {/if}
       </div>
       <div class="flex justify-between items-start -top-6 mb-3">
-        <a class="hover:underline text-blue-600" href="/">Forgot Password</a>
+        <button class="hover:underline text-blue-600" on:click={handleForgotPassword}>Forgot Password</button>
         <a class="hover:underline text-blue-600" href="/signup">SignUp</a>
       </div>
       
@@ -141,3 +148,4 @@
     </form>
   </div>
 </div>
+</section>

@@ -1,7 +1,7 @@
 import { initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth"
 import {getFirestore} from "firebase/firestore"
-
+import {getRemoteConfig} from "firebase/remote-config"
 const firebaseConfig = {
   apiKey: "AIzaSyAZWIvUBFuu_pPQ3eYcS7_lyfdba0SyAq0",
   authDomain: "task-mgmt-b9391.firebaseapp.com",
@@ -14,9 +14,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+const rmtConfig = getRemoteConfig(app);
+
 const auth =getAuth(app);
 
 const firestore = getFirestore(app);
 
-export {auth,firestore,app}
+export {auth,firestore,app,rmtConfig}
 
