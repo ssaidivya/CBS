@@ -201,7 +201,9 @@ export const createTask = async (
       tasksDone: [],
     });
     console.log("Task Created");
+
     alert("Task Created Successfully");
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
@@ -239,7 +241,7 @@ export const _accept_task = async (
     });
     console.log("Task Accepted");
     alert("Task Accepted Successfully");
-    // window.location.reload();
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
@@ -275,6 +277,7 @@ export const _done_task = async (
       });
       console.log("Task Done");
       alert("Task Done Successfully");
+      window.location.reload();
     } else {
       alert("You are not the owner of this task");
     }

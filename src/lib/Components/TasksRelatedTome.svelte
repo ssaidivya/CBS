@@ -17,6 +17,7 @@
   
   let uid = localStorage.getItem("uid");
   let userRealatedTasks = [];
+  let user= JSON.parse(localStorage.getItem("user"))
 
   onMount(() => {
     _get_tasks_realted_to_user(uid)
@@ -36,6 +37,10 @@
     }
   }
 </script>
+
+<svelte:head>
+  <title>Tasks Related To Me</title>
+</svelte:head>
 
 <TableSearch
   placeholder="Search by maker name"
@@ -64,9 +69,9 @@
         <TableBodyCell>{item.createdBy}</TableBodyCell>
         <TableBodyCell>{new Date(item.createdAt).toDateString()}</TableBodyCell>
         <TableBodyCell>{item.needToDone}</TableBodyCell>
-        <TableBodyCell>{item.assignedTo}</TableBodyCell>
+        <TableBodyCell>{item.assignedTo?item.assignedTo:""}</TableBodyCell>
         <TableBodyCell>
-          {#if !item.isTaskAccepted}
+          {#if !item.isTaskAccepted&& !item.isDone}
           <button
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             on:click|stopPropagation={() => handleAccept(item)}

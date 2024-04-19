@@ -71,10 +71,6 @@
 
 </script>
 
-<svelte:head>
-  <title>Profile</title>
-</svelte:head>
-
 <div class="text-center flex justify-center">
   <button on:click={() => (hidden4 = false)}
     ><Avatar

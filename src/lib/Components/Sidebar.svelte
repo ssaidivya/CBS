@@ -66,11 +66,19 @@
       >
     </div>
     {/if}
+    {#if CurrentPath==="/home/tasksdonebyme"}
     <div class="pr-10 text-center justify-center flex w-full">
       <Button on:click={geToTasksDoneByMe} class="w-34"
         >Tasks already Done</Button
       >
     </div>
+    {:else}
+    <div class="pr-10 text-center justify-center flex w-full">
+      <Button on:click={geToTasksDoneByMe} class="w-34"
+        >Tasks Done By Me</Button
+      >
+    </div>
+    {/if}
     <!-- <div class="pr-10 text-center justify-center flex w-full">
      <TasksRelatedTome/>
     </div> -->
