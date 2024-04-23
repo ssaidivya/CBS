@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { collection, query, where, orderBy, onSnapshot, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+  import { collection, query, where, orderBy, onSnapshot, getDocs, addDoc, serverTimestamp, doc } from "firebase/firestore";
   import { firestore as db } from "../../dbconfig/firebase"; // Import your Firestore configuration
   // @ts-ignore
   import socket from "./Socket_Service"; // Import your configured Socket.IO client
@@ -44,6 +44,8 @@
       senderId: currentUser,
       receiverId: selectedUserId,
       sentAt: serverTimestamp(),
+      messageId: Math.random().toString(36).substring(2),
+      isRead:false
     });
 
     newMessage = "";
@@ -74,11 +76,11 @@
     
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
+
       <div
         on:click={() => selectUser(user.uid)}
-        class="cursor-pointer p-4 hover:bg-gray-300"
+        class={`cursor-pointer p-4 hover:bg-gray-300 ${selectedUserId === user.uid ? 'bg-blue-400' : ''}`}
       >
-      
         {user.name}
       </div>
      

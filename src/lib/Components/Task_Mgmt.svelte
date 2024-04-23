@@ -106,8 +106,8 @@
             <TableBodyCell>
               <AccordionContent description={item.description} /></TableBodyCell
             >
-            <TableBodyCell>{item.createdBy}</TableBodyCell>
-            <TableBodyCell>{item.needToDone}</TableBodyCell>
+            <TableBodyCell>{item.uid===uid?"Created By Me":item.createdBy}</TableBodyCell>
+            <TableBodyCell>{item.needToDone!==""?item.needToDone:item.status}</TableBodyCell>
             <TableBodyCell>{item.isDone ? "Yes" : "No"}</TableBodyCell>
             <TableBodyCell>
               {#if item.tasksDone.length}
@@ -128,10 +128,10 @@
                 {#if user.skills && user.skills.includes(item.category)}
                   <div class="flex gap-3">
                     <div class="flex justify-center items-center">
-                      {item.uid === uid ? "Created By Me" : ""}
+                     
                     </div>
                     {#if !item.isTaskAccepted && !item.isDone && item.uid !== uid}
-                      <div class="flex justify-center items-center">{item.isTaskAccepted?"Acccept":""}</div>
+                      <div class="flex justify-center items-center">{item.isTaskAccepted?"":""}</div>
                       <button
                         on:click|stopPropagation={() => handleAccept(item)}
                         data-tooltip-target="tooltip-default"
@@ -142,10 +142,11 @@
                       </button>
                     {/if}
                     {#if !item.isDone && item.uid === uid}
-                      <div class="flex justify-center items-center">Done</div>
+                      <!-- <div class="flex justify-center items-center">Done</div> -->
                       <TaskDoneModel taskData={item} />
-                    {:else}
+                    {#if item.isDone}
                       <div>Already Done</div>
+                    {/if}
                     {/if}
                     <!-- {#if item.uid===uid}
                    

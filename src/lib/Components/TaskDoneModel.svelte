@@ -12,6 +12,8 @@
   let users = [];
   let userMap = [];
 
+  console.log("tasksData",taskData);
+
   onMount(async () => {
     try {
       users = await fetchUsers();
@@ -20,10 +22,6 @@
         name: user.name
       }));
       userMap=userMap.filter(user => user.value !== uid);
-      // if (userMap.length > 0) {
-      //   info.userId = userMap[0].value; 
-      //   info.doneBy = userMap[0].name;
-      // }
     } catch (error) {
       console.error("Failed to fetch users:", error);
     }
@@ -37,7 +35,6 @@
   };
 
   function handleSelectionChange(event) {
-    
     const selectedUser = userMap.find(user => user.value === event);
     if (selectedUser) {
       info.userId = selectedUser.value;
@@ -53,9 +50,9 @@
       info.userId=uid
     }else{
       info.isSelfDone =false;
-      info.doneBy,
+      info.doneBy=tasksData.tasksAccepted[0].name,
       info.doneNote,
-      info.userId
+      info.userId = tasksData.tasksAccepted[0].uid
     }
     console.log("Done Task:", info.doneBy);
     _done_task(taskData.id, info.userId, info);
@@ -66,12 +63,20 @@
 </Button>
 
 <Modal title="Task Done By" bind:open={defaultModal} autoclose>
-  <Select 
+  <!-- <Select 
     placeholder="Choose User" 
     class="mt-2" 
     items={userMap} 
     bind:value={info.userId}
     on:change={(e)=>handleSelectionChange(e.target.value)}
+  /> -->
+  <Input
+    placeholder=""
+    id="doneNote" 
+    name="doneNote" 
+    required 
+    disabled
+   value={!taskData.isTaskAccepted?"No One accepted till now":taskData.assignedTo}
   />
   <Input
     placeholder="Enter your note to complete this task"

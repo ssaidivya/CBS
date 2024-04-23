@@ -46,15 +46,25 @@ io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
   socket.on('sendMessage', async ({ message, sender_id, receiver_id }) => {
-    await db.collection('messages').add({
+    let messageId
+    db.collection('messages').add({
       message,
       sender_id,
       receiver_id,
       sent_at: admin.firestore.FieldValue.serverTimestamp(),
-    });
+      isRead:false,
+      
+    }).then((docRef)=>{
+      messageId=docRef.id
+      docRef.update({
+        messageId:docRef.id
+      })
+    }).then(()=>{
+      console.log("message sent successfully")
+    })
 
     // Broadcast the message to other clients
-    socket.broadcast.emit('messageReceived', { message, sender_id, receiver_id });
+    socket.broadcast.emit('messageReceived', { message, sender_id, receiver_id,messageId});
   });
 
   socket.on('disconnect', () => {

@@ -2,6 +2,7 @@ import { initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth"
 import {getFirestore} from "firebase/firestore"
 import {getRemoteConfig} from "firebase/remote-config"
+
 const firebaseConfig = {
   apiKey: "AIzaSyAZWIvUBFuu_pPQ3eYcS7_lyfdba0SyAq0",
   authDomain: "task-mgmt-b9391.firebaseapp.com",

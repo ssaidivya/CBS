@@ -12,7 +12,7 @@ $:handleHomePage=()=>{
 }
 </script>
 
-
+<!-- 
 <nav class="bg-slate-200 border-gray-200 dark:bg-gray-900">
     <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
         <a
@@ -67,7 +67,7 @@ $:handleHomePage=()=>{
             
         </div>
     </div>
-</nav>
+</nav> -->
 
 <section class="overflow-hidden">
   <Chat/>
