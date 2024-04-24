@@ -6,7 +6,6 @@
   let uid = localStorage.getItem("uid");
   let userData = {};
   onMount(() => {
-    // Subscribe to userStore updates
     const unsubscribe = userStore.subscribe(($store) => {
       userData = $store.user;
     });

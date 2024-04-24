@@ -41,6 +41,7 @@
       <Route path="/home" component={Home} />
       <Route path="/home/tasksrelatedtome" component={TasksRelatedTome} />
       <Route path="/home/tasksdonebyme" component={TasksDoneByMe} />
+     
     </Layout>
     {/if}
     <Route path="/" component={InfoPage} />

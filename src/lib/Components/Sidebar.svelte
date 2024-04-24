@@ -3,23 +3,19 @@
   import { logout } from "../stores/store";
   import CreateTask from "./CreateTask.svelte";
   import { navigate } from "svelte-routing";
+  import Notifications from "./Notifications.svelte";
   export let open = false;
   $: handleLogout = () => {
     logout();
   };
 
   function goToChat() {
+    open=!open
     navigate("/chat");
   }
   function goToTasksRelatedToMe() {
     open=!open
     navigate("/home/tasksrelatedtome");
-    window.location.reload()
-  }
-
-  function goToTasks() {
-    open=!open
-    navigate("/home");
     window.location.reload()
   }
 
@@ -47,35 +43,43 @@
     >
       <CreateTask />
     </a>
-    <div class="pr-10 text-center justify-center flex w-full">
-      <Button on:click={goToChat} class="w-34">Chat</Button>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div on:click={goToChat} class="pr-10 cursor-pointer text-center justify-center flex w-full">
+    Chat
     </div>
     
-    <div class="pr-10 text-center justify-center flex w-full">
-      <Button on:click={goToTasksRelatedToMe} class="w-34"
-        >Tasks Related To Me</Button
-      >
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div on:click={goToTasksRelatedToMe} class="pr-10 text-center cursor-pointer justify-center flex w-full">
+     
+        Tasks Related To Me
     </div>
     {#if CurrentPath==="/home/tasksdonebyme"}
-    <div class="pr-10 text-center justify-center flex w-full">
-      <Button on:click={geToTasksDoneByMe} class="w-34"
-        >Tasks already Done</Button
-      >
+    
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div on:click={geToTasksDoneByMe} class="pr-10 cursor-pointer text-center justify-center flex w-full">
+     
+        Tasks already Done
     </div>
     {:else}
-    <div class="pr-10 text-center justify-center flex w-full">
-      <Button on:click={geToTasksDoneByMe} class="w-34"
-        >Tasks Done By Me</Button
-      >
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div on:click={geToTasksDoneByMe} class="pr-10 text-center cursor-pointer justify-center flex w-full">
+      
+        Tasks Done By Me
     </div>
     {/if}
-    <!-- <div class="pr-10 text-center justify-center flex w-full">
-     <TasksRelatedTome/>
-    </div> -->
-    <div class="absolute bottom-25 w-full pr-24">
+    <div class="pr-10 text-center cursor-pointer justify-center">
+
+      <Notifications/>
+    </div>
+   
+    <div class="pr-10 text-center cursor-pointer justify-center flex bottom-25 w-full">
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a
-        class="block text-center hover:border rounded-full hover:bg-blue-300 hover:text-black"
+        class="block text-center rounded-full"
         href=""
         on:click={()=>window.location.reload}>Reload</a
       >
