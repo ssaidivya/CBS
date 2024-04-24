@@ -50,12 +50,12 @@
       info.userId=uid
     }else{
       info.isSelfDone =false;
-      info.doneBy=tasksData.tasksAccepted[0].name,
+      info.doneBy=taskData.tasksAccepted[0].name,
       info.doneNote,
-      info.userId = tasksData.tasksAccepted[0].uid
+      info.userId = taskData.tasksAccepted[0].uid
     }
     console.log("Done Task:", info.doneBy);
-    _done_task(taskData.id, info.userId, info);
+    _done_task(taskData.id, uid, info);
   }
 </script>
 <Button color="red" on:click={() => (defaultModal = true)}>

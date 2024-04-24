@@ -255,12 +255,11 @@ export const _done_task = async (
     let dbRef = doc(firestore, `tasks/${taskId}`);
     const tasksData = await _get_user_tasks(uid);
 
-    console.log("tasksData[0].uid == uid", tasksData[0].uid == uid);
+    console.log("tasksData[0].uid == uid", tasksData);
     // @ts-ignore
     if (uid === tasksData[0].uid) {
       await updateDoc(dbRef, {
         status: Task_Process.DONE,
-        isTaskAccepted: false,
         isDone: true,
         taskDoneByUID: doneInfo.userId,
         tasksDone: [
@@ -465,14 +464,14 @@ export const _fetch_notifications = async (receiver_id) => {
 export const fetch_message_by_message_id = async (message_id) => {
   try {
     const messagesRef = collection(firestore, "messages");
-    let messageData
+    let messageData;
     let messagesQuery = query(
       messagesRef,
       where("messageId", "==", message_id)
     );
     let messagesSnapshot = await getDocs(messagesQuery);
     messagesSnapshot.docs.map((doc) => {
-      messageData = doc.data().message
+      messageData = doc.data().message;
     });
     console.log("Messages:", messageData);
 
@@ -486,35 +485,75 @@ export const fetch_message_by_message_id = async (message_id) => {
 //fist the notifications need to update like if the read button clicks then notifications ae read
 //and then trigger run automatically to update the messages in
 
-export const updateNotifications = async (notification_id,messageId) => {
-  try{
-    let notificationsRef=collection(firestore, "notifications");
-    let notificationsQuery=query(notificationsRef,where("notificationId","==",notification_id),where("messageId","==",messageId));
-    let notificationsSnapshot=await getDocs(notificationsQuery);
-    let docRef=notificationsSnapshot.docs[0].ref;
-    await updateDoc(docRef,{
-      isRead:true
+export const updateNotifications = async (notification_id, messageId) => {
+  try {
+    let notificationsRef = collection(firestore, "notifications");
+    let notificationsQuery = query(
+      notificationsRef,
+      where("notificationId", "==", notification_id),
+      where("messageId", "==", messageId)
+    );
+    let notificationsSnapshot = await getDocs(notificationsQuery);
+    let docRef = notificationsSnapshot.docs[0].ref;
+    await updateDoc(docRef, {
+      isRead: true,
     });
-    await deleteDoc(docRef)
+    await deleteDoc(docRef);
     console.log("Notification Updated");
     alert("Notification Updated Successfully");
     window.location.reload();
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
-}
+};
 
-
-export const get_user_name_by_uid=async(uid)=>{
+export const get_user_name_by_uid = async (uid) => {
   try {
-    let username=""
+    let username = "";
     const dbRef = collection(firestore, `users`);
     const q = query(dbRef, where("uid", "==", uid));
-    let querySnapshot =await getDocs(q);
-    return querySnapshot.docs[0].data().name
-
+    let querySnapshot = await getDocs(q);
+    return querySnapshot.docs[0].data().name;
   } catch (error) {
     console.error("Error fetching users data:", error);
     throw new Error("Failed to fetch users");
   }
-}
+};
+
+export const _get_user_reviews_of_tasks_done = async (uid) => {
+  try {
+    let reviews = [];
+    const dbRef = collection(firestore, `reviews`);
+    const q = query(dbRef, where("taskDoneByUID", "==", uid));
+    let querySnapshot = await getDocs(q);
+    querySnapshot.docs.map((doc) => {
+      reviews.push({ ...doc.data(), id: doc.id });
+    });
+    console.log("reviews", reviews);
+    return reviews;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const _get_user_reviews_of_tasks_given = async (taskDoneUserId) => {
+  try {
+    let taskRef = collection(firestore, `tasks`);
+    let q = query(taskRef, where("taskDoneByUID", "==", taskDoneUserId));
+    let querySnapshot = await getDocs(q);
+    let tasksData = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    console.log("tasksData", tasksData);
+    let reviews = [];
+    tasksData.map((task) => {
+      reviews.push({
+        review: task.doneNote,
+        doneAt: task.date,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

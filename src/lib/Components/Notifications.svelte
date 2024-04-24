@@ -37,7 +37,7 @@
   
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div on:click={() => (defaultModal = true)} class="p-4 cursor-pointer text-white ">Chat Notifications</div>
+  <div on:click={() => (defaultModal = true)} class="p-4 cursor-pointer text-white ">Notifications</div>
   <Modal title="Chat Notifications" bind:open={defaultModal} autoclose>
     {#if notifications.length>0}
       {#each notifications as notification}

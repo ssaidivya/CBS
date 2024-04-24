@@ -83,6 +83,26 @@ exports.checkDeadlineAndUpdateStatus = functions.pubsub
         isRead:true,
         notificationId
       },{merge:true})
-      
     }
   })
+
+//run the trigger function to save the notification if the task is accepted
+exports.onTaskDone= functions.firestore.document("tasks/{taskId}").onUpdate((change,context)=>{
+  const after = change.after
+  const taskId = context.params.taskId
+  const taskDoneByUID = after.data().taskDoneByUID
+  const tasksDone = after.data().tasksDone[0]
+  const taskStatus = after.data().status
+  const taskDoneUserNotes= tasksDone.doneNote
+  const reviewsRef = db.collection("reviews").doc(taskId)
+  reviewsRef.set({
+    taskId,
+    taskDoneByUID,
+    comment:taskDoneUserNotes,
+    taskStatus,
+    category:after.data().category,
+    title:after.data().title,
+    description:after.data().description,
+    reviewedBy:after.data().uid
+  })
+})
