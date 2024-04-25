@@ -11,23 +11,22 @@
     });
 
     getUserDBData(uid).then(() => {
-      console.log(userData);
+      console.log("userData",userData);
       JSON.stringify(localStorage.setItem("user", JSON.stringify(userData)));
       return userData;
     });
     return unsubscribe;
   });
-
+  console.log("userDatafuc",userData);
   $: if (Object.keys(userData).length > 0) {
     console.log("Reactive userData:", userData);
-    // Perform any other actions needed when userData updates
   }
 </script>
 
 <main class="w-screen border pt-1 fixed h-screen">
   
   {#if Object.keys(userData).length > 0}
-    <Task_Mgmt user={userData} />
+    <Task_Mgmt user={JSON.parse(localStorage.getItem("user"))} />
    
   {/if}
 </main>

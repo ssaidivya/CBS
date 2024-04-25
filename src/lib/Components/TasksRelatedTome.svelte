@@ -78,13 +78,13 @@
           >
             Accept
           </button>
-          {:else}
+          <!-- {:else}
           <button
           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           on:click={()=>alert(`Task is already accepted by ${item.assignedTo} you can't accept again`)}
         >
           Accept
-        </button>
+        </button> -->
             {/if}
         </TableBodyCell>
       </TableBodyRow>

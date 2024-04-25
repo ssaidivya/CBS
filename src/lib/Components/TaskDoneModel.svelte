@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 
-  import { Button, Checkbox, Input, Modal, Select } from "flowbite-svelte";
+  import { Button, Checkbox, Input, Modal, Select, Tooltip } from "flowbite-svelte";
   import { DollarOutline } from "flowbite-svelte-icons";
   import { _done_task, fetchUsers } from "../stores/store";
   import { onMount } from "svelte";
@@ -58,9 +58,13 @@
     _done_task(taskData.id, uid, info);
   }
 </script>
+
+<!-- {#if taskData.isTaskAccepted} -->
 <Button color="red" on:click={() => (defaultModal = true)}>
   <DollarOutline />
 </Button>
+<!-- {/if} -->
+<Tooltip>Done</Tooltip>
 
 <Modal title="Task Done By" bind:open={defaultModal} autoclose>
   <!-- <Select 
@@ -88,9 +92,13 @@
   <div class="flex">
 
     <label for="isSelfDone" class="block text-sm font-medium pr-3 text-orange-500">Done By Me</label>
-    <Checkbox bind:checked={info.isSelfDone}/>
+    <Checkbox disabled={!taskData.isTaskAccepted} bind:checked={info.isSelfDone}/>
   </div>
   <svelte:fragment slot="footer">
-    <Button on:click={handleDoneTasks} color="alternative">Done</Button>
+   {#if taskData.isTaskAccepted}
+      <Button on:click={handleDoneTasks} color="alternative">Done</Button>
+      {:else}
+      <Button on:click={() => (defaultModal = false)} color="alternative">Cancel</Button>
+   {/if}
   </svelte:fragment>
 </Modal>

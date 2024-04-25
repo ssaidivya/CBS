@@ -8,6 +8,7 @@
     TableHead,
     TableHeadCell,
     TableSearch,
+    Tooltip
   } from "flowbite-svelte";
   import AccordionContent from "./Table_Actions.svelte";
   import { onMount } from "svelte";
