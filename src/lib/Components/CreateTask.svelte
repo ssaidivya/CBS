@@ -138,9 +138,9 @@
           on:click={handleSubmit}>Create Task</Button
         >
       {:else}
-        <Button on:click={() => alert("Please fill data properly"),defaultModal=true}
+        <!-- <Button on:click={() => alert("Please fill data properly"),defaultModal=true}
           >Create Task</Button
-        >
+        > -->
       {/if}
 
       <Button color="alternative">Decline</Button>

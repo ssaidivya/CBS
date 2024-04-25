@@ -172,6 +172,7 @@ export const getData = async () => {
     return error;
   }
 };
+
 const Task_Process = Object.freeze({
   ON_GOING: 0,
   DONE: 1,
@@ -181,7 +182,7 @@ const Task_Process = Object.freeze({
 });
 
 export const createTask = async (
-  /** @type {{ title: any; category: any; description: any; needToDone: any; uid: any; createdBy: any; }} */ taskData
+  /** @type {{ title: string; category: any; description: any; needToDone: any; uid: any; createdBy: any; }} */ taskData
 ) => {
   let { title, category, description, needToDone, uid, createdBy } = taskData;
   try {
@@ -240,7 +241,7 @@ export const _accept_task = async (
     });
     console.log("Task Accepted");
     alert("Task Accepted Successfully");
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     console.error(error);
   }
