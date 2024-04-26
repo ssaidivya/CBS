@@ -271,6 +271,7 @@ export const _done_task = async (
             doneBy: doneInfo.doneBy,
             isSelfDone: doneInfo.isSelfDone,
             doneUserId: doneInfo.userId,
+            rating: doneInfo.rating
           },
         ],
       });
@@ -554,6 +555,53 @@ export const _get_user_reviews_of_tasks_given = async (taskDoneUserId) => {
         doneAt: task.date,
       });
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const _get_user_rating = async (uid) => {
+  console.log("====================================", uid);
+  try {
+    let tasksData = await collection(firestore, `tasks`);
+    let q = query(tasksData, where("taskDoneByUID", "==",uid ));
+    let querySnapshot = await getDocs(q);
+    let reviews = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    console.log("reviews", reviews);
+
+    let totalRating = 0;
+    let count = 0;
+    let data=[]
+
+    reviews.forEach((review) => {
+      console.log('====================================');
+      console.log("review", review);
+      console.log('====================================');
+      review.tasksDone.forEach((task) => {
+        if (task.doneUserId === uid) {
+          data.push({
+            rating: task.rating,
+            doneNote: task.doneNote,
+            description: review.description,
+            category:review.category
+          })
+        }
+      });
+    });
+
+    console.log("totalRating", totalRating);
+    console.log("count", count);
+
+    // Calculate average rating if count is not 0
+   
+
+    console.log("data📈", data);
+
+    return data;
   } catch (error) {
     console.log(error);
   }

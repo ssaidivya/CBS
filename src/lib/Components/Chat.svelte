@@ -1,14 +1,14 @@
 <script>
   import { onMount } from "svelte";
   import { collection, query, where, orderBy, onSnapshot, getDocs, addDoc, serverTimestamp, doc } from "firebase/firestore";
-  import { firestore as db } from "../../dbconfig/firebase"; // Import your Firestore configuration
+  import { firestore as db } from "../../dbconfig/firebase"; 
+  import { _get_user_rating } from "../stores/store";
   // @ts-ignore
-  import socket from "./Socket_Service"; // Import your configured Socket.IO client
 
   let users = [];
   let messages = [];
   let newMessage = "";
-  let currentUser = localStorage.getItem("uid"); // Assume this is set when your user logs in
+  let currentUser = localStorage.getItem("uid");
   let selectedUserId = null;
 
   // Fetch users excluding the current user
@@ -58,6 +58,8 @@
   }
   onMount(fetchUsers);
 
+  let ratings
+
   $:handleSkills=(selectedUserId)=>{
     let skills= []
    users.filter((user)=>user.uid===selectedUserId).map((user)=>{
@@ -65,18 +67,24 @@
         skills.push(skill)
       })
    })
+   _get_user_rating(selectedUserId).then((rating)=>{
+      console.log("rating",rating);
+      ratings = rating
+    })
    return skills
   }
+  
 </script>
 
 <div class="flex h-screen pt-4 pl-4 overflow-hidden">
   <div class="w-1/4 bg-gray-200 overflow-y-auto">
     {#if users.length > 0}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     {#each users as user}
     
+
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
-
       <div
         on:click={() => selectUser(user.uid)}
         class={`cursor-pointer p-4 hover:bg-gray-300 ${selectedUserId === user.uid ? 'bg-blue-400' : ''}`}
@@ -112,6 +120,20 @@
           {/each}
         </div>
       </div>
+      {#if ratings}
+      <div>
+        <div>Ratings - </div>
+        <div class="flex space-x-2 pb-6">
+
+          {#each ratings as rating}
+          <span class="te">Task Category- </span>
+          <div class="text-amber-600 font-bold text-mg">{rating.category}</div>
+          <span class="te">Task Rating- </span>
+          <div class="text-amber-600 font-bold text-mg">{rating.rating}</div>
+          {/each}
+          </div>
+      </div>
+      {/if}
 
       {#each messages as message (message.id)}
         <div class={`max-w-xs p-2 break-words border rounded-lg ${message.sender_id === currentUser ? 'ml-auto bg-blue-100' : 'mr-auto bg-gray-100'}`}>

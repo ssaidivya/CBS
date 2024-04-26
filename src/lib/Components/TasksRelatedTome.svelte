@@ -36,6 +36,11 @@
       _accept_task(rowId.id, uid, user.name);
     }
   }
+  $:filterItem=userRealatedTasks?.length > 0 &&
+  userRealatedTasks.filter(
+      (item) =>
+        item.category.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+    );
 </script>
 
 <svelte:head>
@@ -59,7 +64,7 @@
   </TableHead>
   <TableBody class="divide-y">
     {#if userRealatedTasks.length>0}
-    {#each userRealatedTasks as item,index}
+    {#each filterItem as item,index}
       <TableBodyRow>
         <TableBodyCell>{index+1}</TableBodyCell>
         <TableBodyCell>{item.category}</TableBodyCell>

@@ -31,6 +31,11 @@
     });
     $: if (tasksDonebyMe) console.log(tasksDonebyMe);
 
+    $:filterItem=tasksDonebyMe?.length > 0 &&
+    tasksDonebyMe.filter(
+      (item) =>
+        item.category.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+    );
   
   </script>
   
@@ -53,7 +58,7 @@
     </TableHead>
     <TableBody class="divide-y">
       {#if tasksDonebyMe.length>0}
-      {#each tasksDonebyMe as item,index}
+      {#each filterItem as item,index}
         <TableBodyRow>
           <TableBodyCell>{index+1}</TableBodyCell>
           <TableBodyCell>{item.category}</TableBodyCell>
