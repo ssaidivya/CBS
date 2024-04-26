@@ -5,12 +5,15 @@
   import { DollarOutline } from "flowbite-svelte-icons";
   import { _done_task, fetchUsers } from "../stores/store";
   import { onMount } from "svelte";
+  import Rating from "./Rating.svelte";
 
   let defaultModal = false;
   export let taskData;
   let uid = localStorage.getItem("uid");
   let users = [];
   let userMap = [];
+
+
 
   console.log("tasksData",taskData);
 
@@ -32,6 +35,7 @@
     doneBy: "",
     doneNote: "",
     isSelfDone:false,
+    rating: 0
   };
 
   function handleSelectionChange(event) {
@@ -40,6 +44,10 @@
       info.userId = selectedUser.value;
       info.doneBy = selectedUser.name;
     }
+  }
+
+  function handleStarClicked(event) {
+    info.rating = event.detail;
   }
 
   function handleDoneTasks() {
@@ -57,6 +65,8 @@
     console.log("Done Task:", info.doneBy);
     _done_task(taskData.id, uid, info);
   }
+
+
 </script>
 
 <!-- {#if taskData.isTaskAccepted} -->
@@ -89,6 +99,17 @@
     required 
     bind:value={info.doneNote}
   />
+  <div class="flex items-center">
+    <label>Rate:</label>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="stars" on:click={e => handleStarClicked(e)}>
+      {#each [1, 2, 3, 4, 5] as starValue}
+        <span class="star" style="color: {starValue <= info.rating ? 'gold' : 'gray'}">&#9733;</span>
+      {/each}
+    </div>
+    <span class="ml-2">Rating: {info.rating}</span>
+  </div>
   <div class="flex">
 
     <label for="isSelfDone" class="block text-sm font-medium pr-3 text-orange-500">Done By Me</label>
@@ -102,3 +123,30 @@
    {/if}
   </svelte:fragment>
 </Modal>
+
+
+<style>
+  .star {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  .star svg {
+    fill: none;
+    stroke: #ff9900; /* Amazon's star color */
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: stroke 0.2s ease;
+    cursor: pointer;
+  }
+
+  .star:hover svg,
+  .star.filled svg {
+    stroke: #ff9900; /* Change color on hover or when filled */
+  }
+</style>
